@@ -1,0 +1,122 @@
+@startuml
+title Silsila System - Layered Class Diagram
+skinparam classAttributeIconSize 0
+hide empty members
+top to bottom direction
+note as N1
+  All layers use the domain classes
+  (see class-diagram-domain.puml).
+end note
+
+package "Presentation Layer (web pages)" {
+  class SearchController {
+    +search(keyword: String): void
+    +browse(category: MasalaCategory): void
+  }
+  class MasalaController {
+    +viewChain(masalaId: int): void
+    +compareMadhabs(masalaId: int): void
+  }
+  class LinkController {
+    +showProposalForm(): void
+    +submitProposal(masalaId: int, type: String, targetId: int): void
+  }
+  class ReviewController {
+    +listPending(): void
+    +approve(linkId: int, note: String): void
+    +reject(linkId: int, note: String): void
+  }
+  class AuthController {
+    +login(username: String, password: String): void
+    +logout(): void
+  }
+}
+
+package "Application Layer (logic)" {
+  class MasalaService {
+    +searchByKeyword(keyword: String): List<Masala>
+    +browseByCategory(c: MasalaCategory): List<Masala>
+    +getFullChain(masalaId: int): MasalaChain
+    +compareMadhabs(masalaId: int): List<MadhabPosition>
+  }
+  class LinkService {
+    +proposeLink(by: Contributor, masalaId: int, type: String, targetId: int): Link
+    +getPendingLinks(): List<Link>
+    +approveLink(linkId: int, by: Reviewer, note: String): void
+    +rejectLink(linkId: int, by: Reviewer, note: String): void
+  }
+  class AuthService {
+    +login(username: String, password: String): User
+    +isReviewer(user: User): boolean
+  }
+  class MasalaChain {
+    -masala: Masala
+    -ayat: List<Ayah>
+    -tafsirs: List<Tafsir>
+    -hadiths: List<Hadith>
+    -positions: List<MadhabPosition>
+    -qanuns: List<Qanun>
+  }
+}
+
+package "Data Access Layer (DAO interfaces)" {
+  interface MasalaDAO {
+    +findById(id: int): Masala
+    +searchByKeyword(keyword: String): List<Masala>
+    +findByCategory(c: MasalaCategory): List<Masala>
+  }
+  interface AyahDAO {
+    +findApprovedByMasala(masalaId: int): List<Ayah>
+  }
+  interface TafsirDAO {
+    +findByAyah(ayahId: int): List<Tafsir>
+  }
+  interface HadithDAO {
+    +findApprovedByMasala(masalaId: int): List<Hadith>
+  }
+  interface QanunDAO {
+    +findApprovedByMasala(masalaId: int): List<Qanun>
+  }
+  interface MadhabPositionDAO {
+    +findByMasala(masalaId: int): List<MadhabPosition>
+  }
+  interface LinkDAO {
+    +save(link: Link): void
+    +findById(id: int): Link
+    +findByStatus(s: LinkStatus): List<Link>
+    +update(link: Link): void
+  }
+  interface UserDAO {
+    +findByUsername(username: String): User
+  }
+}
+
+package "Database Layer" {
+  database "Silsila DB\n(ayah, tafsir, hadith, masala,\nmadhab_position, qanun,\nlink, user)" as DB
+}
+
+SearchController --> MasalaService
+MasalaController --> MasalaService
+LinkController --> LinkService
+ReviewController --> LinkService
+AuthController --> AuthService
+
+MasalaService --> MasalaDAO
+MasalaService --> AyahDAO
+MasalaService --> TafsirDAO
+MasalaService --> HadithDAO
+MasalaService --> QanunDAO
+MasalaService --> MadhabPositionDAO
+MasalaService ..> MasalaChain : creates
+LinkService --> LinkDAO
+AuthService --> UserDAO
+
+MasalaDAO --> DB
+AyahDAO --> DB
+TafsirDAO --> DB
+HadithDAO --> DB
+QanunDAO --> DB
+MadhabPositionDAO --> DB
+LinkDAO --> DB
+UserDAO --> DB
+@enduml

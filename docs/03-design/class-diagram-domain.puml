@@ -1,0 +1,115 @@
+@startuml
+title Silsila System - Domain Class Diagram
+skinparam classAttributeIconSize 0
+hide empty members
+note as N1
+  Getters and setters are omitted.
+  Only APPROVED links are shown to students.
+end note
+
+enum MasalaCategory {
+  NIKAH
+  TALAQ
+}
+enum Madhab {
+  HANAFI
+  MALIKI
+  SHAFII
+  HANBALI
+}
+enum HadithGrade {
+  SAHIH
+  HASAN
+  DAIF
+}
+enum LinkStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+class Ayah {
+  -ayahId: int
+  -surahName: String
+  -surahNumber: int
+  -ayahNumber: int
+  -text: String
+}
+class Tafsir {
+  -tafsirId: int
+  -sourceBook: String
+  -author: String
+  -explanationText: String
+}
+class Hadith {
+  -hadithId: int
+  -bookName: String
+  -hadithNumber: String
+  -text: String
+  -grade: HadithGrade
+}
+class Masala {
+  -masalaId: int
+  -title: String
+  -category: MasalaCategory
+  -chapter: String
+  -description: String
+}
+class MadhabPosition {
+  -positionId: int
+  -madhab: Madhab
+  -ruling: String
+  -evidence: String
+  -illah: String
+}
+class Qanun {
+  -qanunId: int
+  -statuteName: String
+  -articleNumber: String
+  -description: String
+}
+
+abstract class Link {
+  -linkId: int
+  -status: LinkStatus
+  -proposedAt: Date
+  -reviewedAt: Date
+  -reviewNote: String
+  +approve(reviewer: Reviewer, note: String): void
+  +reject(reviewer: Reviewer, note: String): void
+  +isApproved(): boolean
+}
+class AyahLink
+class HadithLink
+class QanunLink
+
+abstract class User {
+  -userId: int
+  -username: String
+  -passwordHash: String
+  -fullName: String
+}
+class Contributor
+class Reviewer
+
+Ayah "1" -- "1..*" Tafsir : hasTafsir
+Masala "1" *-- "0..4" MadhabPosition : hasOpinions
+Masala "1" -- "0..*" Link : hasLinks
+
+Link <|-- AyahLink
+Link <|-- HadithLink
+Link <|-- QanunLink
+AyahLink "0..*" -- "1" Ayah : basesOn
+HadithLink "0..*" -- "1" Hadith : supports
+QanunLink "0..*" -- "1" Qanun : codifiedAs
+
+User <|-- Contributor
+Contributor <|-- Reviewer
+Contributor "1" -- "0..*" Link : proposes
+Link "0..*" -- "0..1" Reviewer : reviewedBy
+
+Masala ..> MasalaCategory
+MadhabPosition ..> Madhab
+Hadith ..> HadithGrade
+Link ..> LinkStatus
+@enduml
