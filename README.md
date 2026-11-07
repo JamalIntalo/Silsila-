@@ -69,7 +69,7 @@ silsila/
 ```
 
 ## Requirements
-- Java JDK 17 or newer (check with `java -version`)
+- Java JDK 22 or newer (check with `java -version`)
 - Apache Maven 3.9 or newer (check with `mvn -version`)
 - Git (check with `git --version`)
 - A web browser

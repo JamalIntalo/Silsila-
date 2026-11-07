@@ -2,7 +2,7 @@
 title Silsila System - Layered Class Diagram
 skinparam classAttributeIconSize 0
 hide empty members
-top to bottom direction
+left to right direction
 note as N1
   All layers use the domain classes
   (see class-diagram-domain.puml).
