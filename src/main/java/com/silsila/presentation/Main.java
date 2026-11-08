@@ -7,6 +7,7 @@ import com.silsila.dataaccess.HadithDAO;
 import com.silsila.dataaccess.MadhabPositionDAO;
 import com.silsila.dataaccess.MasalaDAO;
 import com.silsila.dataaccess.QanunDAO;
+import com.silsila.dataaccess.RemoteLoader;
 import com.silsila.dataaccess.TafsirDAO;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
@@ -20,6 +21,11 @@ public class Main {
     public static void main(String[] args) throws IOException {
         // Build the layers from the bottom up and connect them.
         Database database = new Database();
+
+        // Load the texts of verses, tafsir and hadith from the websites (or from the cache folder).
+        RemoteLoader loader = new RemoteLoader(database);
+        loader.loadAll();
+
         MasalaDAO masalaDAO = new MasalaDAO(database);
         AyahDAO ayahDAO = new AyahDAO(database);
         TafsirDAO tafsirDAO = new TafsirDAO(database);

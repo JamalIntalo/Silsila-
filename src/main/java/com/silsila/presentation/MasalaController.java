@@ -56,11 +56,17 @@ public class MasalaController implements HttpHandler {
         for (Ayah a : chain.getAyat()) {
             content = content + "<div class=\"box\">";
             content = content + "<strong>" + Html.escape(a.getReference()) + "</strong>";
-            content = content + "<p dir=\"rtl\" style=\"font-size:22px;\">" + Html.escape(a.getText()) + "</p>";
-            for (Tafsir t : chain.getTafsirsOf(a.getId())) {
-                content = content + "<div class=\"small\"><em>Tafsir - " + Html.escape(t.getSourceName())
-                        + ":</em> " + Html.escape(t.getText()) + "</div>";
-            }
+                        // The Arabic text, written right to left and in a bigger font.
+                        content = content + "<p dir=\"rtl\" style=\"font-size:24px; line-height:1.8;\">" + Html.escape(a.getText()) + "</p>";
+                        if (!a.getTranslation().equals("")) {
+                            content = content + "<p>" + Html.escape(a.getTranslation()) + "</p>";
+                        }
+                        // The tafsir is long, so it is inside a <details> block that opens when clicked.
+                        for (Tafsir t : chain.getTafsirsOf(a.getId())) {
+                            content = content + "<details><summary class=\"small\">Tafsir - " + Html.escape(t.getSourceName())
+                                    + " (click to read)</summary>"
+                                    + "<div style=\"white-space:pre-wrap;\">" + Html.escape(t.getText()) + "</div></details>";
+                        }
             content = content + "</div>\n";
         }
 
@@ -72,10 +78,10 @@ public class MasalaController implements HttpHandler {
         for (Hadith h : chain.getHadiths()) {
             content = content + "<div class=\"box\">";
             content = content + "<strong>" + Html.escape(h.getReference()) + "</strong>";
-            content = content + "<p>" + Html.escape(h.getText()) + "</p>";
-            if (!h.getGrade().equals("")) {
-                content = content + "<div class=\"small\">Grade: " + Html.escape(h.getGrade()) + "</div>";
+            if (!h.getArabicText().equals("")) {
+                content = content + "<p dir=\"rtl\" style=\"font-size:20px; line-height:1.8;\">" + Html.escape(h.getArabicText()) + "</p>";
             }
+            content = content + "<p>" + Html.escape(h.getText()) + "</p>";
             content = content + "</div>\n";
         }
 

@@ -2,15 +2,16 @@ package com.silsila.domain;
 
 // One verse of the Qur'an.
 // We only type WHERE the verse is (surah number and ayah number).
-// The Arabic text itself will be loaded from a Qur'an website in Step 5,
-// so nobody has to type it (and nobody can mistype it).
+// The Arabic text and the English translation are loaded from a Qur'an website
+// when the program starts, so nobody has to type them (and nobody can mistype them).
 public class Ayah {
 
     private int id;
     private int surahNumber;
     private String surahName;
     private int ayahNumber;
-    private String text;          // the Arabic text, filled in later from the website
+    private String text;          // the Arabic text, filled in from the website
+    private String translation;   // the English translation, filled in from the website
 
     public Ayah(int id, int surahNumber, String surahName, int ayahNumber, String text) {
         this.id = id;
@@ -18,6 +19,7 @@ public class Ayah {
         this.surahName = surahName;
         this.ayahNumber = ayahNumber;
         this.text = text;
+        this.translation = "";
     }
 
     public int getId() {
@@ -40,9 +42,17 @@ public class Ayah {
         return text;
     }
 
-    // A setter: lets another class change the text after the object was created.
+    public String getTranslation() {
+        return translation;
+    }
+
+    // Setters: let another class change the text after the object was created.
     public void setText(String text) {
         this.text = text;
+    }
+
+    public void setTranslation(String translation) {
+        this.translation = translation;
     }
 
     // The citation shown to students, for example "Surah Al-Baqarah 2:232".

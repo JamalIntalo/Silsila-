@@ -107,9 +107,12 @@ public class Database {
     // ---------------------------------------------------------------
     private void addHadiths() {
         String later = "(The hadith text will be loaded from the hadith website in Step 5.)";
-        hadiths.add(new Hadith(1, "abudawud", "Sunan Abi Dawud", 2085, later, ""));
-        hadiths.add(new Hadith(2, "bukhari", "Sahih al-Bukhari", 5087, later, ""));
-        hadiths.add(new Hadith(3, "muslim", "Sahih Muslim", 1472, later, ""));
+        // Hadith(id, website book name, name shown, number shown, number on the website, text, grade)
+        // For Sahih Muslim the usual citation is 1472, but the website numbers that
+        // hadith 3673, so we keep both numbers.
+        hadiths.add(new Hadith(1, "abudawud", "Sunan Abi Dawud", 2085, 2085, later, ""));
+        hadiths.add(new Hadith(2, "bukhari", "Sahih al-Bukhari", 5087, 5087, later, ""));
+        hadiths.add(new Hadith(3, "muslim", "Sahih Muslim", 1472, 3673, later, ""));
     }
 
     // ---------------------------------------------------------------
