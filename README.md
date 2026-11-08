@@ -120,3 +120,22 @@ git push
 
 ## Course
 [Course name and code] - Islamic University of Madina - Submission [date]
+
+## Data sources and credits
+
+The text of the verses, tafsir and hadith is not typed into this project. It is loaded
+when the program starts from free public data on GitHub (served through the jsDelivr CDN)
+and saved in the `cache` folder, so the project also works without internet.
+
+| Content | Source |
+|---|---|
+| Qur'an, Arabic text (Uthmani) | fawazahmed0/quran-api, edition `ara-quranuthmanihaf` |
+| Qur'an, English translation | fawazahmed0/quran-api, edition `eng-ummmuhammad` (Umm Muhammad, Saheeh International) |
+| Tafsir Ibn Kathir (English) | spa5k/tafsir_api, edition `en-tafisr-ibn-kathir` |
+| Hadith (Arabic and English) and grades | fawazahmed0/hadith-api, editions `ara-` and `eng-` of abudawud, bukhari and muslim |
+
+Websites: https://github.com/fawazahmed0/quran-api, https://github.com/fawazahmed0/hadith-api,
+https://github.com/spa5k/tafsir_api
+
+The madhab positions, book citations and the law article are draft data written by the
+project team and must be verified against the original books.
