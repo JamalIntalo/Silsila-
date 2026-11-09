@@ -26,7 +26,7 @@ public class Database {
     public ArrayList<MadhabPosition> positions = new ArrayList<MadhabPosition>();
     public ArrayList<Link> links = new ArrayList<Link>();
     public ArrayList<User> users = new ArrayList<User>();
-    
+
     public Database() {
         addMasalas();
         addAyat();
@@ -35,6 +35,8 @@ public class Database {
         addQanuns();
         addPositions();
         addLinks();
+        // The second batch of content (more issues, positions, verses and hadith).
+        MoreContent.addTo(this);
     }
 
     // ---------------------------------------------------------------

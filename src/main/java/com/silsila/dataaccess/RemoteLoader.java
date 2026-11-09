@@ -169,8 +169,10 @@ public class RemoteLoader {
             return null;
         }
 
-        // 3. Ask the website. The internet can fail for a moment, so we try twice.
-        for (int attempt = 1; attempt <= 2; attempt++) {
+        // 3. Ask the website. The internet (or the website) can fail for a moment,
+        //for example by answering "403" once, so we try up to three times.
+        boolean websiteAnswered = false;   // true if the website answered, even with an error
+        for (int attempt = 1; attempt <= 3; attempt++) {
             try {
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))
@@ -178,16 +180,17 @@ public class RemoteLoader {
                         .build();
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-                if (response.statusCode() != 200) {
-                    System.out.println("  The website answered " + response.statusCode() + " for " + url);
-                    return null;
+                if (response.statusCode() == 200) {
+                    // Save the answer for next time.
+                    new File("cache").mkdirs();
+                    Files.writeString(file.toPath(), response.body());
+                    System.out.println("  Loaded " + cacheName);
+                    return response.body();
                 }
 
-                // Save the answer for next time.
-                new File("cache").mkdirs();
-                Files.writeString(file.toPath(), response.body());
-                System.out.println("  Loaded " + cacheName);
-                return response.body();
+                websiteAnswered = true;
+                System.out.println("  Attempt " + attempt + ": the website answered " + response.statusCode() + " for " + cacheName);
+                Thread.sleep(1000);   // wait one second before trying again
 
             } catch (IOException e) {
                 System.out.println("  Attempt " + attempt + " failed for " + cacheName + " (" + e.getMessage() + ")");
@@ -196,7 +199,13 @@ public class RemoteLoader {
             }
         }
 
-        // Both attempts failed: stop asking the websites, so the program does not wait for every request.
+        // All attempts failed.
+        if (websiteAnswered) {
+            // The website is reachable, only this file failed: keep trying the other files.
+            return null;
+        }
+        // The website could not be reached at all: stop asking, so the program does not
+        // wait for every request.
         System.out.println("  Could not reach the website. Working without internet.");
         offline = true;
         return null;

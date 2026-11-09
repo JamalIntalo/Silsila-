@@ -82,6 +82,9 @@ public class MasalaController implements HttpHandler {
                 content = content + "<p dir=\"rtl\" style=\"font-size:20px; line-height:1.8;\">" + Html.escape(h.getArabicText()) + "</p>";
             }
             content = content + "<p>" + Html.escape(h.getText()) + "</p>";
+            if (!h.getGrade().equals("")) {
+                content = content + "<div class=\"small\">Grade: " + Html.escape(h.getGrade()) + "</div>";
+            }
             content = content + "</div>\n";
         }
 
