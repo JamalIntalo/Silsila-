@@ -11,6 +11,7 @@ public class Link {
     private int targetId;      // the id of that verse, hadith or law
     private String citation;   // where the connection comes from (requirement NFR-4)
     private String status;     // "PENDING", "APPROVED" or "REJECTED"
+    private String proposedBy; // the username of the person who proposed it ("" for the first data)
 
     public Link(int id, int masalaId, String type, int targetId, String citation, String status) {
         this.id = id;
@@ -19,6 +20,7 @@ public class Link {
         this.targetId = targetId;
         this.citation = citation;
         this.status = status;
+        this.proposedBy = "";
     }
 
     public int getId() {
@@ -45,8 +47,26 @@ public class Link {
         return status;
     }
 
+    public String getProposedBy() {
+        return proposedBy;
+    }
+
+    // A reviewer changes the status to "APPROVED" or "REJECTED".
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setProposedBy(String proposedBy) {
+        this.proposedBy = proposedBy;
+    }
+
     // True if a reviewer has approved this link.
     public boolean isApproved() {
         return status.equals("APPROVED");
+    }
+
+    // True if the link waits for a reviewer.
+    public boolean isPending() {
+        return status.equals("PENDING");
     }
 }

@@ -13,6 +13,11 @@ public class QanunDAO {
         this.database = database;
     }
 
+        // Returns all the laws (used by the proposal form).
+    public ArrayList<Qanun> findAll() {
+        return database.qanuns;
+    }
+    
     // Returns the law with this id, or null if there is none.
     public Qanun findById(int id) {
         for (Qanun q : database.qanuns) {

@@ -8,6 +8,7 @@ import com.silsila.domain.Masala;
 import com.silsila.domain.Qanun;
 import com.silsila.domain.Tafsir;
 import java.util.ArrayList;
+import com.silsila.domain.User;
 
 // This is our "database" for now: just lists kept in memory.
 // The data is created when the program starts and disappears when it stops.
@@ -24,7 +25,8 @@ public class Database {
     public ArrayList<Qanun> qanuns = new ArrayList<Qanun>();
     public ArrayList<MadhabPosition> positions = new ArrayList<MadhabPosition>();
     public ArrayList<Link> links = new ArrayList<Link>();
-
+    public ArrayList<User> users = new ArrayList<User>();
+    
     public Database() {
         addMasalas();
         addAyat();

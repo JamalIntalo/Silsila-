@@ -13,6 +13,11 @@ public class AyahDAO {
         this.database = database;
     }
 
+        // Returns all the verses (used by the proposal form).
+    public ArrayList<Ayah> findAll() {
+        return database.ayat;
+    }
+    
     // Returns the verse with this id, or null if there is none.
     public Ayah findById(int id) {
         for (Ayah a : database.ayat) {

@@ -1,8 +1,10 @@
 package com.silsila.presentation;
 
 import com.sun.net.httpserver.HttpExchange;
+import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 // Helper for reading what the browser sent us.
 public class Request {
@@ -30,5 +32,28 @@ public class Request {
             }
         }
         return "";
+    }
+
+    // Reads what a filled-in form sent (a "POST" request).
+    // The browser sends the fields in the body of the request, written like  username=ali&password=xyz
+    // This returns them as a list of name -> value pairs.
+    // It can only be called ONCE per request, because the body can be read only once.
+    public static HashMap<String, String> getForm(HttpExchange exchange) throws IOException {
+        String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+
+        HashMap<String, String> form = new HashMap<String, String>();
+        if (body.equals("")) {
+            return form;
+        }
+        for (String pair : body.split("&")) {
+            String[] parts = pair.split("=", 2);
+            String name = URLDecoder.decode(parts[0], StandardCharsets.UTF_8);
+            String value = "";
+            if (parts.length == 2) {
+                value = URLDecoder.decode(parts[1], StandardCharsets.UTF_8);
+            }
+            form.put(name, value);
+        }
+        return form;
     }
 }

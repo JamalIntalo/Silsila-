@@ -13,6 +13,11 @@ public class HadithDAO {
         this.database = database;
     }
 
+        // Returns all the hadith (used by the proposal form).
+    public ArrayList<Hadith> findAll() {
+        return database.hadiths;
+    }
+    
     // Returns the hadith with this id, or null if there is none.
     public Hadith findById(int id) {
         for (Hadith h : database.hadiths) {

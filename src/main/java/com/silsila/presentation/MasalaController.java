@@ -117,7 +117,15 @@ public class MasalaController implements HttpHandler {
             content = content + "</div>\n";
         }
 
-        Html.send(exchange, 200, Html.page(masala.getTitle(), content));
+                // Contributors and reviewers can propose more evidence for this issue.
+                content = content + "<h2>Help improve this issue</h2>\n";
+                if (SessionManager.getUser(exchange) == null) {
+                    content = content + "<p class=\"small\"><a href=\"/login\">Log in</a> to propose a verse, hadith or law for this issue.</p>\n";
+                } else {
+                    content = content + "<p><a href=\"/propose?id=" + masala.getId() + "\">Propose a link for this issue</a></p>\n";
+                }
+        
+                Html.send(exchange, 200, Html.page(masala.getTitle(), content));
     }
 
     // Turns "NIKAH" into a nicer name for the page.
