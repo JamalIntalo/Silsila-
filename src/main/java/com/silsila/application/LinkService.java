@@ -1,10 +1,8 @@
 package com.silsila.application;
 
-import com.silsila.dataaccess.AyahDAO;
-import com.silsila.dataaccess.HadithDAO;
+import com.silsila.dataaccess.ContentDAO;
 import com.silsila.dataaccess.LinkDAO;
 import com.silsila.dataaccess.MasalaDAO;
-import com.silsila.dataaccess.QanunDAO;
 import com.silsila.domain.Ayah;
 import com.silsila.domain.Hadith;
 import com.silsila.domain.Link;
@@ -23,17 +21,12 @@ public class LinkService {
 
     private LinkDAO linkDAO;
     private MasalaDAO masalaDAO;
-    private AyahDAO ayahDAO;
-    private HadithDAO hadithDAO;
-    private QanunDAO qanunDAO;
+    private ContentDAO contentDAO;
 
-    public LinkService(LinkDAO linkDAO, MasalaDAO masalaDAO, AyahDAO ayahDAO,
-                       HadithDAO hadithDAO, QanunDAO qanunDAO) {
+    public LinkService(LinkDAO linkDAO, MasalaDAO masalaDAO, ContentDAO contentDAO) {
         this.linkDAO = linkDAO;
         this.masalaDAO = masalaDAO;
-        this.ayahDAO = ayahDAO;
-        this.hadithDAO = hadithDAO;
-        this.qanunDAO = qanunDAO;
+        this.contentDAO = contentDAO;
     }
 
     // ---------------------------------------------------------------
@@ -50,15 +43,15 @@ public class LinkService {
 
     // The lists used to fill the drop-down menus of the proposal form.
     public ArrayList<Ayah> getAllAyat() {
-        return ayahDAO.findAll();
+        return contentDAO.findAllAyat();
     }
 
     public ArrayList<Hadith> getAllHadiths() {
-        return hadithDAO.findAll();
+        return contentDAO.findAllHadiths();
     }
 
     public ArrayList<Qanun> getAllQanuns() {
-        return qanunDAO.findAll();
+        return contentDAO.findAllQanuns();
     }
 
     // The links that wait for a reviewer.
@@ -69,17 +62,17 @@ public class LinkService {
     // A readable name for what a link points to, for example "Surah Al-Baqarah 2:229".
     public String describeTarget(Link link) {
         if (link.getType().equals("AYAH")) {
-            Ayah a = ayahDAO.findById(link.getTargetId());
+            Ayah a = contentDAO.findAyahById(link.getTargetId());
             if (a != null) {
                 return a.getReference();
             }
         } else if (link.getType().equals("HADITH")) {
-            Hadith h = hadithDAO.findById(link.getTargetId());
+            Hadith h = contentDAO.findHadithById(link.getTargetId());
             if (h != null) {
                 return h.getReference();
             }
         } else if (link.getType().equals("QANUN")) {
-            Qanun q = qanunDAO.findById(link.getTargetId());
+            Qanun q = contentDAO.findQanunById(link.getTargetId());
             if (q != null) {
                 return q.getReference();
             }

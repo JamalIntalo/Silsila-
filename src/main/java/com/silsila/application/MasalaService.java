@@ -1,11 +1,7 @@
 package com.silsila.application;
 
-import com.silsila.dataaccess.AyahDAO;
-import com.silsila.dataaccess.HadithDAO;
-import com.silsila.dataaccess.MadhabPositionDAO;
+import com.silsila.dataaccess.ContentDAO;
 import com.silsila.dataaccess.MasalaDAO;
-import com.silsila.dataaccess.QanunDAO;
-import com.silsila.dataaccess.TafsirDAO;
 import com.silsila.domain.Ayah;
 import com.silsila.domain.Hadith;
 import com.silsila.domain.MadhabPosition;
@@ -18,20 +14,11 @@ import java.util.ArrayList;
 public class MasalaService {
 
     private MasalaDAO masalaDAO;
-    private AyahDAO ayahDAO;
-    private TafsirDAO tafsirDAO;
-    private HadithDAO hadithDAO;
-    private QanunDAO qanunDAO;
-    private MadhabPositionDAO positionDAO;
+    private ContentDAO contentDAO;
 
-    public MasalaService(MasalaDAO masalaDAO, AyahDAO ayahDAO, TafsirDAO tafsirDAO,
-                         HadithDAO hadithDAO, QanunDAO qanunDAO, MadhabPositionDAO positionDAO) {
+    public MasalaService(MasalaDAO masalaDAO, ContentDAO contentDAO) {
         this.masalaDAO = masalaDAO;
-        this.ayahDAO = ayahDAO;
-        this.tafsirDAO = tafsirDAO;
-        this.hadithDAO = hadithDAO;
-        this.qanunDAO = qanunDAO;
-        this.positionDAO = positionDAO;
+        this.contentDAO = contentDAO;
     }
 
     public ArrayList<Masala> getAllMasalas() {
@@ -77,18 +64,18 @@ public class MasalaService {
             return null;
         }
 
-        // Only approved links reach this point, because the DAOs filter them.
-        ArrayList<Ayah> ayat = ayahDAO.findApprovedByMasala(masalaId);
+        // Only approved links reach this point, because the DAO filters them.
+        ArrayList<Ayah> ayat = contentDAO.findApprovedAyatByMasala(masalaId);
 
         // Collect the tafsir of every verse of this issue.
         ArrayList<Tafsir> tafsirs = new ArrayList<Tafsir>();
         for (Ayah a : ayat) {
-            tafsirs.addAll(tafsirDAO.findByAyah(a.getId()));
+            tafsirs.addAll(contentDAO.findTafsirsByAyah(a.getId()));
         }
 
-        ArrayList<Hadith> hadiths = hadithDAO.findApprovedByMasala(masalaId);
-        ArrayList<MadhabPosition> positions = positionDAO.findByMasala(masalaId);
-        ArrayList<Qanun> qanuns = qanunDAO.findApprovedByMasala(masalaId);
+        ArrayList<Hadith> hadiths = contentDAO.findApprovedHadithsByMasala(masalaId);
+        ArrayList<MadhabPosition> positions = contentDAO.findPositionsByMasala(masalaId);
+        ArrayList<Qanun> qanuns = contentDAO.findApprovedQanunsByMasala(masalaId);
 
         return new MasalaChain(masala, ayat, tafsirs, hadiths, positions, qanuns);
     }

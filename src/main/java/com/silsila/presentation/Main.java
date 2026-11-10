@@ -3,15 +3,11 @@ package com.silsila.presentation;
 import com.silsila.application.AuthService;
 import com.silsila.application.LinkService;
 import com.silsila.application.MasalaService;
-import com.silsila.dataaccess.AyahDAO;
+import com.silsila.dataaccess.ContentDAO;
 import com.silsila.dataaccess.Database;
-import com.silsila.dataaccess.HadithDAO;
 import com.silsila.dataaccess.LinkDAO;
-import com.silsila.dataaccess.MadhabPositionDAO;
 import com.silsila.dataaccess.MasalaDAO;
-import com.silsila.dataaccess.QanunDAO;
 import com.silsila.dataaccess.RemoteLoader;
-import com.silsila.dataaccess.TafsirDAO;
 import com.silsila.dataaccess.UserDAO;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
@@ -31,17 +27,12 @@ public class Main {
         loader.loadAll();
 
         MasalaDAO masalaDAO = new MasalaDAO(database);
-        AyahDAO ayahDAO = new AyahDAO(database);
-        TafsirDAO tafsirDAO = new TafsirDAO(database);
-        HadithDAO hadithDAO = new HadithDAO(database);
-        QanunDAO qanunDAO = new QanunDAO(database);
-        MadhabPositionDAO positionDAO = new MadhabPositionDAO(database);
+        ContentDAO contentDAO = new ContentDAO(database);
         LinkDAO linkDAO = new LinkDAO(database);
         UserDAO userDAO = new UserDAO(database);
 
-        MasalaService masalaService = new MasalaService(masalaDAO, ayahDAO, tafsirDAO,
-                hadithDAO, qanunDAO, positionDAO);
-        LinkService linkService = new LinkService(linkDAO, masalaDAO, ayahDAO, hadithDAO, qanunDAO);
+        MasalaService masalaService = new MasalaService(masalaDAO, contentDAO);
+        LinkService linkService = new LinkService(linkDAO, masalaDAO, contentDAO);
         AuthService authService = new AuthService(userDAO);
 
         // Two DEMO accounts so that you can try the system.
