@@ -79,7 +79,29 @@ public class LinkService {
         }
         return "(unknown)";
     }
-
+        // The verse that a link points to, or null if the link is not about a verse.
+        public Ayah getAyahOf(Link link) {
+            if (link.getType().equals("AYAH")) {
+                return contentDAO.findAyahById(link.getTargetId());
+            }
+            return null;
+        }
+    
+        // The hadith that a link points to, or null if the link is not about a hadith.
+        public Hadith getHadithOf(Link link) {
+            if (link.getType().equals("HADITH")) {
+                return contentDAO.findHadithById(link.getTargetId());
+            }
+            return null;
+        }
+    
+        // The law that a link points to, or null if the link is not about a law.
+        public Qanun getQanunOf(Link link) {
+            if (link.getType().equals("QANUN")) {
+                return contentDAO.findQanunById(link.getTargetId());
+            }
+            return null;
+        }
     // ---------------------------------------------------------------
     // A contributor proposes a link
     // ---------------------------------------------------------------

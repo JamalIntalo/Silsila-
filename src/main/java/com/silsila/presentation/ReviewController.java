@@ -1,7 +1,10 @@
 package com.silsila.presentation;
 
 import com.silsila.application.LinkService;
+import com.silsila.domain.Ayah;
+import com.silsila.domain.Hadith;
 import com.silsila.domain.Link;
+import com.silsila.domain.Qanun;
 import com.silsila.domain.User;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -79,6 +82,7 @@ public class ReviewController implements HttpHandler {
             content = content + "<div>Issue: <a href=\"/masala?id=" + link.getMasalaId() + "\">"
                     + Html.escape(issueTitle) + "</a></div>";
             content = content + "<div>Proposed evidence: <strong>" + Html.escape(linkService.describeTarget(link)) + "</strong></div>";
+            content = content + showEvidence(link);
             content = content + "<div>Citation: " + Html.escape(link.getCitation()) + "</div>";
             content = content + "<div class=\"small\">Proposed by " + Html.escape(link.getProposedBy()) + "</div>";
 
@@ -92,5 +96,37 @@ public class ReviewController implements HttpHandler {
         }
 
         Html.send(exchange, 200, Html.page("Review links", content));
+    }
+
+    // Shows the text of the proposed evidence, so that the reviewer can read it
+    // and check it against the issue before approving.
+    private String showEvidence(Link link) {
+        String html = "";
+
+        Ayah ayah = linkService.getAyahOf(link);
+        if (ayah != null) {
+            html = html + "<p dir=\"rtl\" style=\"font-size:22px; line-height:1.8;\">" + Html.escape(ayah.getText()) + "</p>";
+            if (!ayah.getTranslation().equals("")) {
+                html = html + "<p>" + Html.escape(ayah.getTranslation()) + "</p>";
+            }
+        }
+
+        Hadith hadith = linkService.getHadithOf(link);
+        if (hadith != null) {
+            if (!hadith.getArabicText().equals("")) {
+                html = html + "<p dir=\"rtl\" style=\"font-size:20px; line-height:1.8;\">" + Html.escape(hadith.getArabicText()) + "</p>";
+            }
+            html = html + "<p>" + Html.escape(hadith.getText()) + "</p>";
+            if (!hadith.getGrade().equals("")) {
+                html = html + "<div class=\"small\">Grade: " + Html.escape(hadith.getGrade()) + "</div>";
+            }
+        }
+
+        Qanun qanun = linkService.getQanunOf(link);
+        if (qanun != null) {
+            html = html + "<p>" + Html.escape(qanun.getDescription()) + "</p>";
+        }
+
+        return html;
     }
 }
